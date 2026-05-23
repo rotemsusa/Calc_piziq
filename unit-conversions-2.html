@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>המרות יחידות · פיזיקה</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg-2: #131829;
+  --card: #1a2138;
+  --border: rgba(255,255,255,0.08);
+  --text: #e8ecf5;
+  --muted: #8892b0;
+  --blue: #60a5fa;
+  --green: #34d399;
+  --yellow: #fbbf24;
+  --purple: #a78bfa;
+  --pink: #f472b6;
+  --cyan: #22d3ee;
+  --orange: #fb923c;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 16px 12px 80px;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(96,165,250,0.08), transparent 60%),
+    radial-gradient(ellipse 80% 50% at 80% 100%, rgba(167,139,250,0.08), transparent 60%);
+}
+.container { max-width: 760px; margin: 0 auto; }
+.header { text-align: center; padding: 20px 0 24px; }
+.header .icon { font-size: 36px; margin-bottom: 4px; }
+.header h1 {
+  font-size: clamp(22px, 6vw, 32px);
+  font-weight: 900;
+  background: linear-gradient(120deg, var(--blue), var(--purple), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--card);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.tab {
+  flex: 1;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab.active {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: white;
+}
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 18px;
+}
+@media (max-width: 520px) {
+  .cat-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.cat-btn {
+  padding: 10px 4px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+  color: var(--muted);
+  border-radius: 10px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.cat-btn .emoji { font-size: 18px; }
+.cat-btn.active {
+  background: rgba(96,165,250,0.15);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.conv-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+@media (max-width: 480px) {
+  .conv-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .arrow-mid { text-align: center; }
+}
+.conv-side {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+}
+.conv-side input {
+  width: 100%;
+  padding: 8px 10px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  direction: ltr;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.conv-side input:focus {
+  outline: none;
+  border-color: var(--blue);
+}
+.conv-side select {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.conv-side.result input {
+  color: var(--green);
+  background: rgba(52,211,153,0.08);
+  border-color: rgba(52,211,153,0.3);
+}
+.arrow-mid {
+  font-size: 24px;
+  color: var(--blue);
+  font-weight: 900;
+}
+
+.steps-box {
+  margin-top: 16px;
+  padding: 14px;
+  background: linear-gradient(135deg, rgba(167,139,250,0.06), rgba(34,211,238,0.06));
+  border: 1px solid rgba(167,139,250,0.25);
+  border-radius: 12px;
+}
+.steps-title {
+  font-size: 12px;
+  color: var(--purple);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.step {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 6px 10px;
+  margin: 4px 0;
+  background: rgba(0,0,0,0.25);
+  border-radius: 6px;
+  border-right: 2px solid var(--cyan);
+  direction: rtl;
+  text-align: right;
+  unicode-bidi: plaintext;
+}
+.step .unit {
+  display: inline-block;
+  white-space: nowrap;
+  direction: rtl;
+}
+.step .unit sup {
+  font-size: 0.75em;
+  vertical-align: super;
+}
+.step-note {
+  font-family: 'Heebo', sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+  direction: rtl;
+  text-align: right;
+}
+.step-note .unit {
+  display: inline-block;
+  white-space: nowrap;
+}
+.step-note .unit sup {
+  font-size: 0.75em;
+  vertical-align: super;
+}
+
+.swap-btn {
+  margin-top: 4px;
+  width: 100%;
+  padding: 8px;
+  background: rgba(244,114,182,0.1);
+  border: 1px solid rgba(244,114,182,0.3);
+  color: var(--pink);
+  border-radius: 10px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+.swap-btn:hover { background: rgba(244,114,182,0.2); }
+
+/* Table panel */
+.table-section { margin-bottom: 18px; }
+.table-section h3 {
+  font-size: 15px;
+  color: var(--purple);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+}
+.conv-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+.conv-table th {
+  background: var(--bg-2);
+  color: var(--muted);
+  padding: 8px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 11px;
+  border-bottom: 1px solid var(--border);
+}
+.conv-table td {
+  padding: 9px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.conv-table .arrow { color: var(--blue); font-weight: 700; }
+.conv-table .from { color: var(--text); }
+.conv-table .to { color: var(--green); font-weight: 700; }
+
+.tip-box {
+  background: rgba(251,191,36,0.08);
+  border-right: 3px solid var(--yellow);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+.tip-box strong { color: var(--yellow); }
+
+/* ============ PRACTICE STYLES ============ */
+.start-title {
+  font-size: 22px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 10px;
+  background: linear-gradient(120deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.start-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  text-align: center;
+  margin-bottom: 4px;
+}
+.start-desc strong { color: var(--yellow); }
+
+.cat-check-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.cat-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.cat-check:has(input:checked) {
+  background: rgba(96,165,250,0.12);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.cat-check input { accent-color: var(--blue); }
+.cat-check .emoji { font-size: 18px; }
+
+.start-btn, .restart-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  border: none;
+  color: white;
+  border-radius: 12px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.start-btn:hover, .restart-btn:hover { transform: translateY(-2px); }
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.quiz-progress { color: var(--muted); font-weight: 700; }
+.quiz-score { color: var(--green); font-weight: 800; }
+
+.progress-bar {
+  height: 6px;
+  background: var(--bg-2);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  width: 10%;
+  transition: width 0.3s;
+}
+
+.question-cat {
+  display: inline-block;
+  padding: 3px 12px;
+  background: rgba(167,139,250,0.15);
+  color: var(--purple);
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.question-text {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.question-text .target-val {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(96,165,250,0.15);
+  border: 1px solid rgba(96,165,250,0.3);
+  color: var(--blue);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  margin: 0 4px;
+  white-space: nowrap;
+}
+
+.options {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.option-btn {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-2);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.15s;
+  unicode-bidi: plaintext;
+}
+.option-btn:hover:not(:disabled) {
+  border-color: var(--blue);
+  background: rgba(96,165,250,0.08);
+}
+.option-btn .opt-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: var(--card);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  font-family: 'Heebo', sans-serif;
+  flex-shrink: 0;
+}
+.option-btn.correct {
+  background: rgba(52,211,153,0.15);
+  border-color: var(--green);
+  color: var(--green);
+}
+.option-btn.correct .opt-letter { background: var(--green); color: #0a0e1a; }
+.option-btn.wrong {
+  background: rgba(244,114,182,0.12);
+  border-color: var(--pink);
+  color: var(--pink);
+}
+.option-btn.wrong .opt-letter { background: var(--pink); color: #0a0e1a; }
+.option-btn:disabled { cursor: default; }
+
+.hint-btn {
+  width: 100%;
+  padding: 10px;
+  background: rgba(251,191,36,0.08);
+  border: 1px dashed rgba(251,191,36,0.4);
+  color: var(--yellow);
+  border-radius: 10px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.hint-btn:hover { background: rgba(251,191,36,0.15); }
+.hint-btn:disabled { opacity: 0.5; cursor: default; }
+
+.hint-box {
+  display: none;
+  padding: 12px 14px;
+  background: rgba(251,191,36,0.08);
+  border-right: 3px solid var(--yellow);
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.hint-box.show { display: block; }
+.hint-box .hint-line {
+  margin-bottom: 6px;
+}
+.hint-box .hint-line:last-child { margin-bottom: 0; }
+
+.feedback-box {
+  display: none;
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+.feedback-box.show { display: block; }
+.feedback-box.correct {
+  background: linear-gradient(135deg, rgba(52,211,153,0.1), rgba(34,211,238,0.08));
+  border: 1px solid rgba(52,211,153,0.3);
+}
+.feedback-box.wrong {
+  background: linear-gradient(135deg, rgba(244,114,182,0.08), rgba(167,139,250,0.06));
+  border: 1px solid rgba(244,114,182,0.3);
+}
+.feedback-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.feedback-box.correct .feedback-title { color: var(--green); }
+.feedback-box.wrong .feedback-title { color: var(--pink); }
+
+.solution-title {
+  font-size: 12px;
+  color: var(--purple);
+  font-weight: 700;
+  margin: 10px 0 6px;
+}
+.step-header {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--cyan);
+  margin: 12px 0 8px;
+  padding: 6px 10px;
+  background: rgba(34,211,238,0.08);
+  border-radius: 6px;
+  border-right: 3px solid var(--cyan);
+}
+.solution-step {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 8px 12px;
+  margin: 4px 0;
+  background: rgba(0,0,0,0.3);
+  border-radius: 6px;
+  border-right: 2px solid var(--cyan);
+  direction: rtl;
+  unicode-bidi: plaintext;
+  text-align: right;
+  line-height: 1.7;
+}
+.solution-note {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 6px 0;
+  line-height: 1.6;
+}
+.solution-note strong { color: var(--yellow); }
+
+.next-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  border: none;
+  color: white;
+  border-radius: 10px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.results-emoji {
+  font-size: 64px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.results-title {
+  font-size: 22px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 8px;
+  background: linear-gradient(120deg, var(--cyan), var(--purple), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.results-score {
+  text-align: center;
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.results-score span { color: var(--green); font-weight: 800; font-size: 18px; }
+
+.unit-display {
+  display: inline-block;
+  white-space: nowrap;
+}
+.unit-display sup {
+  font-size: 0.75em;
+  vertical-align: super;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="icon">📐</div>
+    <h1>המרות יחידות</h1>
+    <p>אורך · שטח · נפח · זמן · מסה</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="practice">✏️ תרגול</button>
+    <button class="tab" data-tab="table">📊 טבלה מלאה</button>
+  </div>
+
+  <!-- ============ PRACTICE PANEL ============ -->
+  <div class="panel active" id="panel-practice">
+    <!-- Start screen -->
+    <div id="start-screen" class="card">
+      <div class="start-title">🎯 תרגול: מה גדול יותר?</div>
+      <div class="start-desc">בכל שאלה תקבל ערך עם יחידה, ותצטרך לבחור איזה מבין 4 ערכים שווה לו (או הכי קרוב). אפשר לבקש <strong>רמז</strong> לפני שעונים, ואחרי שעונים מקבלים פתרון מלא עם כל שלבי החישוב.</div>
+
+      <label class="label" style="margin-top: 16px;">קטגוריות לתרגול</label>
+      <div class="cat-check-grid">
+        <label class="cat-check"><input type="checkbox" value="length" checked><span class="emoji">📏</span>אורך</label>
+        <label class="cat-check"><input type="checkbox" value="area" checked><span class="emoji">🟦</span>שטח</label>
+        <label class="cat-check"><input type="checkbox" value="volume" checked><span class="emoji">🧊</span>נפח</label>
+        <label class="cat-check"><input type="checkbox" value="time" checked><span class="emoji">⏱️</span>זמן</label>
+        <label class="cat-check"><input type="checkbox" value="mass" checked><span class="emoji">⚖️</span>מסה</label>
+      </div>
+
+      <button class="start-btn" onclick="startQuiz()">🚀 התחל תרגול (10 שאלות)</button>
+    </div>
+
+    <!-- Quiz screen -->
+    <div id="quiz-screen" class="card" style="display:none;">
+      <div class="quiz-header">
+        <div class="quiz-progress">
+          שאלה <span id="q-num">1</span> מתוך <span id="q-total">10</span>
+        </div>
+        <div class="quiz-score">ניקוד: <span id="q-score">0</span></div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+      <div class="question-cat" id="question-cat"></div>
+      <div class="question-text" id="question-text"></div>
+
+      <div class="options" id="options"></div>
+
+      <button class="hint-btn" id="hint-btn" onclick="showHint()">💡 רמז</button>
+      <div class="hint-box" id="hint-box"></div>
+
+      <div class="feedback-box" id="feedback-box"></div>
+
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()" style="display:none;">שאלה הבאה ←</button>
+    </div>
+
+    <!-- Results screen -->
+    <div id="results-screen" class="card" style="display:none;">
+      <div class="results-emoji" id="results-emoji">🏆</div>
+      <div class="results-title" id="results-title"></div>
+      <div class="results-score">
+        ענית נכון על <span id="final-score">0</span> מתוך <span id="final-total">10</span> שאלות
+        (<span id="final-pct">0</span>%)
+      </div>
+      <button class="restart-btn" onclick="resetQuiz()">🔄 תרגול חדש</button>
+    </div>
+  </div>
+
+  <!-- ============ TABLE PANEL ============ -->
+  <div class="panel" id="panel-table">
+    <div class="card" id="table-content"></div>
+  </div>
+</div>
+
+<script>
+const CATEGORIES = {
+  length: {
+    name: 'אורך',
+    emoji: '📏',
+    units: [
+      { key: 'mm', label: 'מ"מ', html: 'מ"מ', factor: 0.001 },
+      { key: 'cm', label: 'ס"מ', html: 'ס"מ', factor: 0.01 },
+      { key: 'm', label: 'מטר', html: 'מטר', factor: 1 },
+      { key: 'km', label: 'ק"מ', html: 'ק"מ', factor: 1000 },
+    ],
+    baseLabel: 'מטר',
+    tableTitle: '📏 אורך',
+    facts: [
+      ['1 ס"מ', '10 מ"מ'],
+      ['1 מטר', '100 ס"מ'],
+      ['1 מטר', '1,000 מ"מ'],
+      ['1 ק"מ', '1,000 מטר'],
+      ['1 ק"מ', '100,000 ס"מ'],
+      ['1 ק"מ', '1,000,000 מ"מ'],
+    ],
+    tip: '<strong>אורך — מימד אחד.</strong> כל קפיצה ל"גדול יותר" מחלקים, כל קפיצה ל"קטן יותר" מכפילים. מ"מ → ס"מ ÷10, ס"מ → מטר ÷100, מטר → ק"מ ÷1000.'
+  },
+  area: {
+    name: 'שטח',
+    emoji: '🟦',
+    units: [
+      { key: 'mm2', label: 'מ"מ בריבוע', html: 'מ"מ<sup>2</sup>', factor: 0.000001 },
+      { key: 'cm2', label: 'ס"מ בריבוע', html: 'ס"מ<sup>2</sup>', factor: 0.0001 },
+      { key: 'm2', label: 'מטר בריבוע', html: 'מ<sup>2</sup>', factor: 1 },
+      { key: 'dunam', label: 'דונם', html: 'דונם', factor: 1000 },
+      { key: 'km2', label: 'ק"מ בריבוע', html: 'ק"מ<sup>2</sup>', factor: 1000000 },
+    ],
+    baseLabel: 'מטר בריבוע',
+    tableTitle: '🟦 שטח (בריבוע)',
+    facts: [
+      ['1 ס"מ בריבוע', '100 מ"מ בריבוע (10×10)'],
+      ['1 מטר בריבוע', '10,000 ס"מ בריבוע (100×100)'],
+      ['1 מטר בריבוע', '1,000,000 מ"מ בריבוע'],
+      ['1 דונם', '1,000 מטר בריבוע'],
+      ['1 ק"מ בריבוע', '1,000,000 מטר בריבוע'],
+      ['1 ק"מ בריבוע', '1,000 דונם'],
+    ],
+    tip: '<strong>שטח = אורך × רוחב, אז יחידות בריבוע.</strong> כשממירים — מעלים את היחס בריבוע. מ"מ↔ס"מ: יחס 10 → בשטח 10×10 = 100. ס"מ↔מטר: יחס 100 → בשטח 100×100 = 10,000.'
+  },
+  volume: {
+    name: 'נפח',
+    emoji: '🧊',
+    units: [
+      { key: 'mm3', label: 'מ"מ מעוקב', html: 'מ"מ<sup>3</sup>', factor: 0.000000001 },
+      { key: 'cm3', label: 'ס"מ מעוקב (מ"ל)', html: 'ס"מ<sup>3</sup>', factor: 0.000001 },
+      { key: 'liter', label: 'ליטר', html: 'ליטר', factor: 0.001 },
+      { key: 'm3', label: 'מטר מעוקב', html: 'מ<sup>3</sup>', factor: 1 },
+    ],
+    baseLabel: 'מטר מעוקב',
+    tableTitle: '🧊 נפח (במעוקב)',
+    facts: [
+      ['1 ס"מ מעוקב', '1,000 מ"מ מעוקב (10×10×10)'],
+      ['1 ס"מ מעוקב', '1 מ"ל'],
+      ['1 ליטר', '1,000 ס"מ מעוקב (מ"ל)'],
+      ['1 מטר מעוקב', '1,000,000 ס"מ מעוקב'],
+      ['1 מטר מעוקב', '1,000 ליטר'],
+      ['1 מטר מעוקב', '1,000,000,000 מ"מ מעוקב'],
+    ],
+    tip: '<strong>נפח = אורך × רוחב × גובה, אז יחידות במעוקב.</strong> כשממירים — מעלים את היחס בחזקת 3. מ"מ↔ס"מ: יחס 10 → בנפח 10×10×10 = 1,000. ס"מ↔מטר: יחס 100 → בנפח 100×100×100 = 1,000,000.'
+  },
+  time: {
+    name: 'זמן',
+    emoji: '⏱️',
+    units: [
+      { key: 's', label: 'שניות', html: 'שניות', factor: 1 },
+      { key: 'min', label: 'דקות', html: 'דקות', factor: 60 },
+      { key: 'hour', label: 'שעות', html: 'שעות', factor: 3600 },
+    ],
+    baseLabel: 'שניות',
+    tableTitle: '⏱️ זמן',
+    facts: [
+      ['1 דקה', '60 שניות'],
+      ['1 שעה', '60 דקות'],
+      ['1 שעה', '3,600 שניות'],
+      ['1 יום', '24 שעות = 86,400 שניות'],
+    ],
+    tip: '<strong>זמן הוא לא עשרוני!</strong> 60 שניות בדקה, 60 דקות בשעה (לא 100). חצי שעה = 30 דקות = 1,800 שניות.'
+  },
+  mass: {
+    name: 'מסה',
+    emoji: '⚖️',
+    units: [
+      { key: 'mg', label: 'מ"ג', html: 'מ"ג', factor: 0.000001 },
+      { key: 'g', label: 'גרם', html: 'גרם', factor: 0.001 },
+      { key: 'kg', label: 'ק"ג', html: 'ק"ג', factor: 1 },
+      { key: 'ton', label: 'טון', html: 'טון', factor: 1000 },
+    ],
+    baseLabel: 'ק"ג',
+    tableTitle: '⚖️ מסה',
+    facts: [
+      ['1 גרם', '1,000 מ"ג'],
+      ['1 ק"ג', '1,000 גרם'],
+      ['1 ק"ג', '1,000,000 מ"ג'],
+      ['1 טון', '1,000 ק"ג'],
+      ['1 טון', '1,000,000 גרם'],
+    ],
+    tip: '<strong>מסה — כל קפיצה היא ×1,000.</strong> מ"ג → גרם → ק"ג → טון, וכל מעבר זה אלף. שונה מאורך שבו יש גם ×10 וגם ×100 וגם ×1,000.'
+  },
+};
+
+function fmt(n) {
+  if (!isFinite(n)) return '—';
+  if (n === 0) return '0';
+  const abs = Math.abs(n);
+  // For very large numbers, use locale formatting with commas
+  if (abs >= 1) {
+    if (abs >= 1e15) return n.toExponential(2);
+    // Round to remove tiny floating point errors
+    const rounded = parseFloat(n.toPrecision(10));
+    return rounded.toLocaleString('he-IL', {maximumFractionDigits: 6});
+  }
+  // For small numbers, avoid scientific notation up to very small values
+  if (abs >= 0.000001) {
+    const rounded = parseFloat(n.toPrecision(6));
+    // Use toFixed to avoid scientific notation
+    let str = rounded.toString();
+    if (str.includes('e')) {
+      // Convert to fixed notation
+      const decimals = Math.max(0, -Math.floor(Math.log10(abs)) + 5);
+      str = rounded.toFixed(Math.min(decimals, 20));
+      // Trim trailing zeros
+      if (str.includes('.')) str = str.replace(/0+$/, '').replace(/\.$/, '');
+    }
+    return str;
+  }
+  // Only truly extreme values use scientific notation
+  return n.toExponential(2);
+}
+
+// ============== QUIZ LOGIC ==============
+const TOTAL_QUESTIONS = 10;
+let quiz = {
+  categories: [],
+  questions: [],
+  current: 0,
+  score: 0,
+  answered: false,
+  hintLevel: 0,
+};
+
+// Build the reference table panel (shared)
+function buildTable() {
+  const root = document.getElementById('table-content');
+  let html = '';
+  Object.keys(CATEGORIES).forEach(key => {
+    const c = CATEGORIES[key];
+    html += `<div class="table-section">
+      <h3>${c.tableTitle}</h3>
+      <table class="conv-table">
+        <thead><tr><th>מ-</th><th></th><th>שווה ל-</th></tr></thead>
+        <tbody>
+          ${c.facts.map(([f, t]) => `<tr><td class="from">${f}</td><td class="arrow">=</td><td class="to">${t}</td></tr>`).join('')}
+        </tbody>
+      </table>
+      <div class="tip-box">${c.tip}</div>
+    </div>`;
+  });
+  root.innerHTML = html;
+}
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-' + t.dataset.tab).classList.add('active');
+  });
+});
+
+// Nice round values to pick from for questions
+const NICE_VALUES = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 50, 100, 250, 500, 1000, 1500, 2000];
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Generate a single question
+function generateQuestion(catKey) {
+  const cat = CATEGORIES[catKey];
+  const units = cat.units;
+
+  // Pick source unit, then a target unit that's NOT too far away.
+  // For area/volume, limit to adjacent units (max 1 step away) to avoid huge ratios.
+  // For other categories, allow up to 2 steps.
+  const maxStep = (catKey === 'area' || catKey === 'volume') ? 1 : 2;
+
+  let srcIdx = Math.floor(Math.random() * units.length);
+  const candidates = [];
+  for (let i = 0; i < units.length; i++) {
+    if (i !== srcIdx && Math.abs(i - srcIdx) <= maxStep) {
+      candidates.push(i);
+    }
+  }
+  const tgtIdx = candidates[Math.floor(Math.random() * candidates.length)];
+
+  const srcUnit = units[srcIdx];
+  const tgtUnit = units[tgtIdx];
+
+  // Pick source value - prefer values that give nice target numbers
+  // If we're going to a bigger unit (result will be small), pick a bigger source value
+  const ratio = srcUnit.factor / tgtUnit.factor;
+  let valuePool;
+  if (ratio < 0.01) {
+    // Result will be very small - pick a value that gives reasonable result
+    valuePool = [100, 250, 500, 1000, 2000, 5000];
+  } else if (ratio < 1) {
+    valuePool = [10, 20, 50, 100, 250, 500];
+  } else if (ratio > 100) {
+    valuePool = [1, 2, 3, 5, 10];
+  } else {
+    valuePool = [1, 2, 3, 5, 10, 15, 20, 25, 50, 100];
+  }
+  const srcVal = pick(valuePool);
+
+  // Correct answer in target unit
+  const correctVal = srcVal * ratio;
+
+  // Build 3 distractors:
+  // 1. Right number but wrong unit (most common student mistake)
+  // 2. Wrong magnitude (off by factor of 10 or 100 or 1000)
+  // 3. Forgot to square/cube (for area/volume), or completely wrong calculation
+  const distractors = [];
+
+  // Distractor 1: same numeric value, just labeled with target unit (no conversion)
+  if (srcVal !== correctVal) {
+    distractors.push({ val: srcVal, unit: tgtUnit, mistake: 'no-convert' });
+  }
+
+  // Distractor 2: off by factor of 10 (decimal point error)
+  const decimalOff = Math.random() < 0.5 ? correctVal * 10 : correctVal / 10;
+  if (decimalOff !== correctVal && decimalOff > 0) {
+    distractors.push({ val: decimalOff, unit: tgtUnit, mistake: 'decimal' });
+  }
+
+  // Distractor 3: square/cube mistake for area/volume, otherwise inverse conversion
+  if (catKey === 'area') {
+    const linearWrong = srcVal * Math.sqrt(srcUnit.factor / tgtUnit.factor);
+    if (linearWrong > 0 && linearWrong !== correctVal) {
+      distractors.push({ val: linearWrong, unit: tgtUnit, mistake: 'no-square' });
+    }
+  } else if (catKey === 'volume') {
+    const linearWrong = srcVal * Math.cbrt(srcUnit.factor / tgtUnit.factor);
+    if (linearWrong > 0 && linearWrong !== correctVal) {
+      distractors.push({ val: linearWrong, unit: tgtUnit, mistake: 'no-cube' });
+    }
+  } else {
+    // Inverse conversion (multiplied instead of divided or vice versa)
+    const inverseVal = srcVal * tgtUnit.factor / srcUnit.factor;
+    if (inverseVal !== correctVal && inverseVal > 0) {
+      distractors.push({ val: inverseVal, unit: tgtUnit, mistake: 'inverse' });
+    }
+  }
+
+  // Filler distractors if needed
+  while (distractors.length < 3) {
+    const factor = pick([0.1, 100, 1000]);
+    const v = correctVal * factor;
+    if (v > 0 && !distractors.some(d => Math.abs(d.val - v) < 1e-9)) {
+      distractors.push({ val: v, unit: tgtUnit, mistake: 'random' });
+    }
+  }
+
+  const allOptions = shuffle([
+    { val: correctVal, unit: tgtUnit, correct: true },
+    ...distractors.slice(0, 3).map(d => ({ ...d, correct: false }))
+  ]);
+
+  return {
+    catKey,
+    cat,
+    srcVal,
+    srcUnit,
+    tgtUnit,
+    correctVal,
+    options: allOptions,
+  };
+}
+
+function startQuiz() {
+  const checked = Array.from(document.querySelectorAll('.cat-check input:checked')).map(c => c.value);
+  if (checked.length === 0) {
+    alert('יש לבחור לפחות קטגוריה אחת');
+    return;
+  }
+  quiz.categories = checked;
+  quiz.questions = [];
+  quiz.current = 0;
+  quiz.score = 0;
+
+  for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+    const catKey = quiz.categories[i % quiz.categories.length];
+    quiz.questions.push(generateQuestion(catKey));
+  }
+  // Shuffle so categories are mixed
+  quiz.questions = shuffle(quiz.questions);
+
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('q-total').textContent = TOTAL_QUESTIONS;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = quiz.questions[quiz.current];
+  quiz.answered = false;
+  quiz.hintLevel = 0;
+
+  document.getElementById('q-num').textContent = quiz.current + 1;
+  document.getElementById('q-score').textContent = quiz.score;
+  document.getElementById('progress-fill').style.width = `${((quiz.current) / TOTAL_QUESTIONS) * 100}%`;
+
+  document.getElementById('question-cat').innerHTML = `${q.cat.emoji} ${q.cat.name}`;
+  document.getElementById('question-text').innerHTML = `
+    איזה ערך שווה ל-<span class="target-val">${fmt(q.srcVal)} <span class="unit-display">${q.srcUnit.html}</span></span>?
+  `;
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  const letters = ['א', 'ב', 'ג', 'ד'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `
+      <span class="opt-letter">${letters[i]}</span>
+      <span>${fmt(opt.val)} <span class="unit-display">${opt.unit.html}</span></span>
+    `;
+    btn.onclick = () => answer(i);
+    optsEl.appendChild(btn);
+  });
+
+  document.getElementById('hint-btn').disabled = false;
+  document.getElementById('hint-btn').style.display = 'block';
+  document.getElementById('hint-btn').textContent = '💡 רמז';
+  document.getElementById('hint-box').classList.remove('show');
+  document.getElementById('hint-box').innerHTML = '';
+  document.getElementById('feedback-box').classList.remove('show', 'correct', 'wrong');
+  document.getElementById('feedback-box').innerHTML = '';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('next-btn').textContent = quiz.current === TOTAL_QUESTIONS - 1 ? 'סיום ולתוצאות 🏁' : 'שאלה הבאה ←';
+}
+
+function showHint() {
+  const q = quiz.questions[quiz.current];
+  quiz.hintLevel++;
+  const hints = buildHints(q);
+  const box = document.getElementById('hint-box');
+  box.innerHTML = hints.slice(0, quiz.hintLevel).map((h, i) =>
+    `<div class="hint-line"><strong>רמז ${i + 1}:</strong> ${h}</div>`
+  ).join('');
+  box.classList.add('show');
+
+  const btn = document.getElementById('hint-btn');
+  if (quiz.hintLevel >= hints.length) {
+    btn.disabled = true;
+    btn.textContent = '✓ כל הרמזים הוצגו';
+  } else {
+    btn.textContent = `💡 רמז נוסף (${quiz.hintLevel + 1}/${hints.length})`;
+  }
+}
+
+function buildHints(q) {
+  const hints = [];
+  const srcH = q.srcUnit.html;
+  const tgtH = q.tgtUnit.html;
+  const ratio = q.srcUnit.factor / q.tgtUnit.factor;
+
+  // Hint 1: direction (which is bigger?)
+  const srcBigger = q.srcUnit.factor > q.tgtUnit.factor;
+  if (srcBigger) {
+    hints.push(`<span class="unit-display">${srcH}</span> <strong>גדולה</strong> מ-<span class="unit-display">${tgtH}</span>, אז התוצאה תהיה <strong>מספר גדול יותר</strong> מ-${fmt(q.srcVal)}.`);
+  } else {
+    hints.push(`<span class="unit-display">${srcH}</span> <strong>קטנה</strong> מ-<span class="unit-display">${tgtH}</span>, אז התוצאה תהיה <strong>מספר קטן יותר</strong> מ-${fmt(q.srcVal)}.`);
+  }
+
+  // Hint 2: the conversion ratio - phrased to be intuitive
+  // Always show "1 [bigger] = N [smaller]" since that's easier to remember
+  if (ratio >= 1) {
+    hints.push(`<strong>היחס:</strong> 1 <span class="unit-display">${srcH}</span> = ${fmt(ratio)} <span class="unit-display">${tgtH}</span>.`);
+  } else {
+    const inv = 1 / ratio;
+    hints.push(`<strong>היחס:</strong> 1 <span class="unit-display">${tgtH}</span> = ${fmt(inv)} <span class="unit-display">${srcH}</span>.`);
+  }
+
+  // Hint 3: square/cube reasoning - explain via the linear ratio
+  if (q.catKey === 'area') {
+    // For area, the linear ratio between the units
+    const linearFactor = Math.sqrt(Math.max(q.srcUnit.factor, q.tgtUnit.factor) / Math.min(q.srcUnit.factor, q.tgtUnit.factor));
+    if (Math.abs(linearFactor - Math.round(linearFactor)) < 0.0001) {
+      const lr = Math.round(linearFactor);
+      hints.push(`<strong>שטח = בריבוע!</strong> אם היחס הליניארי בין היחידות הוא ${lr}, אז ביחידות שטח היחס הוא ${lr}×${lr} = ${fmt(lr * lr)}.`);
+    }
+  } else if (q.catKey === 'volume') {
+    const linearFactor = Math.cbrt(Math.max(q.srcUnit.factor, q.tgtUnit.factor) / Math.min(q.srcUnit.factor, q.tgtUnit.factor));
+    if (Math.abs(linearFactor - Math.round(linearFactor)) < 0.0001) {
+      const lr = Math.round(linearFactor);
+      hints.push(`<strong>נפח = במעוקב!</strong> אם היחס הליניארי בין היחידות הוא ${lr}, אז ביחידות נפח היחס הוא ${lr}×${lr}×${lr} = ${fmt(lr * lr * lr)}.`);
+    }
+  }
+
+  // Hint 4: actual operation
+  if (ratio >= 1) {
+    hints.push(`<strong>חישוב:</strong> ${fmt(q.srcVal)} × ${fmt(ratio)} = ?`);
+  } else {
+    hints.push(`<strong>חישוב:</strong> ${fmt(q.srcVal)} ÷ ${fmt(1/ratio)} = ?`);
+  }
+
+  return hints;
+}
+
+function answer(idx) {
+  if (quiz.answered) return;
+  quiz.answered = true;
+  const q = quiz.questions[quiz.current];
+  const opt = q.options[idx];
+  const isCorrect = opt.correct;
+
+  const buttons = document.querySelectorAll('.option-btn');
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (q.options[i].correct) btn.classList.add('correct');
+    else if (i === idx) btn.classList.add('wrong');
+  });
+
+  document.getElementById('hint-btn').style.display = 'none';
+
+  if (isCorrect) {
+    quiz.score++;
+    document.getElementById('q-score').textContent = quiz.score;
+  }
+
+  renderFeedback(q, opt, isCorrect);
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+// ============== HELPER: visual grid for area ==============
+function buildAreaVisual(linearRatio, smallLabel, bigLabel) {
+  // Show a big square made of linearRatio × linearRatio small squares
+  // Cap visualization at 10×10 for readability
+  const n = Math.min(linearRatio, 10);
+  const cellSize = n <= 5 ? 22 : (n <= 8 ? 16 : 13);
+  const gap = 1;
+  const totalSize = n * cellSize + (n + 1) * gap;
+
+  let cells = '';
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      const x = gap + c * (cellSize + gap);
+      const y = gap + r * (cellSize + gap);
+      cells += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="rgba(96,165,250,0.25)" stroke="rgba(96,165,250,0.7)" stroke-width="1"/>`;
+    }
+  }
+
+  const ellipsis = linearRatio > 10
+    ? `<div style="font-size:11px; color:var(--muted); margin-top:4px;">(מציג רק 10×10 - בפועל ${linearRatio}×${linearRatio})</div>`
+    : '';
+
+  return `
+    <div style="display:flex; align-items:center; gap:12px; justify-content:center; margin:10px 0; flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <svg width="${totalSize}" height="${totalSize}" style="background:rgba(0,0,0,0.3); border-radius:6px; border:2px solid var(--blue);">
+          ${cells}
+        </svg>
+        <div style="font-size:11px; color:var(--blue); margin-top:4px; font-weight:700;">1 ${bigLabel}</div>
+        ${ellipsis}
+      </div>
+      <div style="font-size:13px; color:var(--text); max-width:200px; line-height:1.6;">
+        ריבוע אחד גדול<br>
+        מורכב מ-<strong style="color:var(--blue);">${linearRatio}×${linearRatio} = ${linearRatio * linearRatio}</strong><br>
+        ריבועים קטנים של ${smallLabel}
+      </div>
+    </div>
+  `;
+}
+
+function buildVolumeVisual(linearRatio, smallLabel, bigLabel) {
+  // Show a 3D cube made of small cubes (isometric)
+  const n = Math.min(linearRatio, 5);
+  const size = 16;
+
+  // Draw isometric cube grid
+  const w = n * size * 1.7 + 40;
+  const h = n * size * 1.7 + 40;
+  const cx = w / 2, cy = h / 2;
+
+  let faces = '';
+  // Front face (small squares grid)
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      const x = 20 + c * size;
+      const y = 20 + (n - 1 - r) * size + n * size * 0.3;
+      faces += `<rect x="${x}" y="${y}" width="${size}" height="${size}" fill="rgba(96,165,250,0.3)" stroke="rgba(96,165,250,0.8)" stroke-width="1"/>`;
+    }
+  }
+  // Top face (parallelogram grid)
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      const baseX = 20 + c * size;
+      const baseY = 20 + n * size * 0.3;
+      const offX = (r + 1) * size * 0.5;
+      const offY = -(r + 1) * size * 0.5;
+      const points = [
+        [baseX + offX, baseY + offY],
+        [baseX + size + offX, baseY + offY],
+        [baseX + size + offX - size * 0.5, baseY + offY + size * 0.5],
+        [baseX + offX - size * 0.5, baseY + offY + size * 0.5],
+      ].map(p => p.join(',')).join(' ');
+      faces += `<polygon points="${points}" fill="rgba(167,139,250,0.3)" stroke="rgba(167,139,250,0.8)" stroke-width="1"/>`;
+    }
+  }
+  // Side face
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      const baseX = 20 + n * size;
+      const baseY = 20 + (n - 1 - r) * size + n * size * 0.3;
+      const offX = (c + 1) * size * 0.5;
+      const offY = -(c + 1) * size * 0.5;
+      const points = [
+        [baseX, baseY],
+        [baseX, baseY + size],
+        [baseX + offX, baseY + offY + size],
+        [baseX + offX, baseY + offY],
+      ].map(p => p.join(',')).join(' ');
+      faces += `<polygon points="${points}" fill="rgba(52,211,153,0.25)" stroke="rgba(52,211,153,0.8)" stroke-width="1"/>`;
+    }
+  }
+
+  const ellipsis = linearRatio > 5
+    ? `<div style="font-size:11px; color:var(--muted); margin-top:4px;">(מציג רק 5×5×5 - בפועל ${linearRatio}×${linearRatio}×${linearRatio})</div>`
+    : '';
+
+  return `
+    <div style="display:flex; align-items:center; gap:12px; justify-content:center; margin:10px 0; flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <svg width="${w}" height="${h}" style="background:rgba(0,0,0,0.3); border-radius:6px;">
+          ${faces}
+        </svg>
+        <div style="font-size:11px; color:var(--blue); margin-top:4px; font-weight:700;">1 ${bigLabel}</div>
+        ${ellipsis}
+      </div>
+      <div style="font-size:13px; color:var(--text); max-width:200px; line-height:1.6;">
+        קובייה אחת גדולה<br>
+        מורכבת מ-<strong style="color:var(--blue);">${linearRatio}×${linearRatio}×${linearRatio} = ${linearRatio ** 3}</strong><br>
+        קוביות קטנות של ${smallLabel}
+      </div>
+    </div>
+  `;
+}
+
+// Get the "linear" form of a unit label (strip ² or ³)
+function getLinearLabel(unitKey, catKey) {
+  if (catKey !== 'area' && catKey !== 'volume') return null;
+  const map = {
+    mm2: 'מ"מ', cm2: 'ס"מ', m2: 'מטר', km2: 'ק"מ',
+    mm3: 'מ"מ', cm3: 'ס"מ', m3: 'מטר',
+  };
+  return map[unitKey] || null;
+}
+
+function renderFeedback(q, opt, isCorrect) {
+  const box = document.getElementById('feedback-box');
+  const ratio = q.srcUnit.factor / q.tgtUnit.factor;
+  const srcH = q.srcUnit.html;
+  const tgtH = q.tgtUnit.html;
+  const srcBigger = q.srcUnit.factor > q.tgtUnit.factor;
+
+  let html = '';
+  if (isCorrect) {
+    html += `<div class="feedback-title">✅ נכון מאוד!</div>`;
+  } else {
+    html += `<div class="feedback-title">❌ לא נכון</div>`;
+    let mistakeText = '';
+    if (opt.mistake === 'no-convert') mistakeText = 'בחרת את אותו מספר עם יחידה אחרת — שכחת להמיר!';
+    else if (opt.mistake === 'decimal') mistakeText = 'טעות במיקום הנקודה העשרונית.';
+    else if (opt.mistake === 'no-square') mistakeText = 'שכחת להעלות את היחס בריבוע! שטח = יחידות בריבוע.';
+    else if (opt.mistake === 'no-cube') mistakeText = 'שכחת להעלות את היחס בחזקת 3! נפח = יחידות במעוקב.';
+    else if (opt.mistake === 'inverse') mistakeText = 'הפעלת את הפעולה ההפוכה — כפלת במקום לחלק או להפך.';
+    if (mistakeText) html += `<div style="font-size:13px; color:var(--muted); margin-bottom:6px;">${mistakeText}</div>`;
+  }
+
+  html += `<div class="solution-title">📐 הפתרון המפורט:</div>`;
+
+  // For area/volume: get the linear ratio and linear unit names
+  const bigUnit = srcBigger ? q.srcUnit : q.tgtUnit;
+  const smallUnit = srcBigger ? q.tgtUnit : q.srcUnit;
+  const fullRatio = bigUnit.factor / smallUnit.factor;
+  const linRatio = q.catKey === 'area' ? Math.round(Math.sqrt(fullRatio))
+                 : q.catKey === 'volume' ? Math.round(Math.cbrt(fullRatio))
+                 : null;
+  const linSmall = getLinearLabel(smallUnit.key, q.catKey);
+  const linBig = getLinearLabel(bigUnit.key, q.catKey);
+
+  // ============ STEP 1: Which unit is bigger? ============
+  html += `<div class="step-header">🔍 שלב 1 — איזו יחידה גדולה יותר?</div>`;
+  if (srcBigger) {
+    html += `<div class="solution-note"><span class="unit-display">${srcH}</span> <strong>גדולה</strong> מ-<span class="unit-display">${tgtH}</span>.</div>`;
+    html += `<div class="solution-note" style="background:rgba(96,165,250,0.08); padding:8px 12px; border-radius:6px; margin-top:6px;">💭 <strong>חשיבה:</strong> אני ממיר ליחידה קטנה יותר, אז יידרשו <strong>הרבה יחידות קטנות</strong> כדי להחליף את היחידות הגדולות. התשובה תהיה <strong>מספר גדול יותר</strong> מ-${fmt(q.srcVal)}.</div>`;
+  } else {
+    html += `<div class="solution-note"><span class="unit-display">${srcH}</span> <strong>קטנה</strong> מ-<span class="unit-display">${tgtH}</span>.</div>`;
+    html += `<div class="solution-note" style="background:rgba(96,165,250,0.08); padding:8px 12px; border-radius:6px; margin-top:6px;">💭 <strong>חשיבה:</strong> אני ממיר ליחידה גדולה יותר, אז כמה יחידות קטנות יתאגדו לפחות יחידות גדולות. התשובה תהיה <strong>מספר קטן יותר</strong> מ-${fmt(q.srcVal)}.</div>`;
+  }
+
+  // ============ STEP 2: The ratio between units ============
+  html += `<div class="step-header" style="margin-top:14px;">📏 שלב 2 — מה היחס בין היחידות?</div>`;
+
+  if (q.catKey === 'area' && linRatio) {
+    // Show the linear ratio first, then the square explanation
+    html += `<div class="solution-note">קודם בודקים את היחס <strong>הליניארי</strong> (אורך רגיל, בלי ריבוע):</div>`;
+    html += `<div class="solution-step">1 ${linBig} = ${linRatio} ${linSmall}</div>`;
+    html += `<div class="solution-note" style="margin-top:10px; padding:10px 14px; background:rgba(251,191,36,0.08); border-right:3px solid var(--yellow); border-radius:6px;">
+      ⚠️ <strong>כאן עושים את הטעות הגדולה!</strong><br>
+      בשטח אנחנו לא עובדים עם אורך אלא עם <strong>שטח</strong> — וזה אומר ${linBig}×${linBig} (אורך × רוחב).<br>
+      אז גם את היחס צריך לקחת בריבוע!
+    </div>`;
+    html += buildAreaVisual(linRatio, linSmall, linBig);
+    html += `<div class="solution-step" style="border-color: var(--green); background:rgba(52,211,153,0.1);">1 <span class="unit-display">${bigUnit.html}</span> = ${linRatio} × ${linRatio} = <strong>${fmt(fullRatio)}</strong> <span class="unit-display">${smallUnit.html}</span></div>`;
+
+  } else if (q.catKey === 'volume' && linRatio) {
+    html += `<div class="solution-note">קודם בודקים את היחס <strong>הליניארי</strong> (אורך רגיל, בלי מעוקב):</div>`;
+    html += `<div class="solution-step">1 ${linBig} = ${linRatio} ${linSmall}</div>`;
+    html += `<div class="solution-note" style="margin-top:10px; padding:10px 14px; background:rgba(251,191,36,0.08); border-right:3px solid var(--yellow); border-radius:6px;">
+      ⚠️ <strong>בנפח עובדים בתלת-ממד!</strong><br>
+      קובייה היא ${linBig}×${linBig}×${linBig} (אורך × רוחב × גובה).<br>
+      אז את היחס צריך לקחת בחזקת 3!
+    </div>`;
+    html += buildVolumeVisual(linRatio, linSmall, linBig);
+    html += `<div class="solution-step" style="border-color: var(--green); background:rgba(52,211,153,0.1);">1 <span class="unit-display">${bigUnit.html}</span> = ${linRatio} × ${linRatio} × ${linRatio} = <strong>${fmt(fullRatio)}</strong> <span class="unit-display">${smallUnit.html}</span></div>`;
+
+  } else {
+    // Simple categories (length, time, mass)
+    html += `<div class="solution-note">היחס בין היחידות:</div>`;
+    html += `<div class="solution-step">1 <span class="unit-display">${bigUnit.html}</span> = ${fmt(fullRatio)} <span class="unit-display">${smallUnit.html}</span></div>`;
+
+    // Add helpful context for time
+    if (q.catKey === 'time') {
+      if (bigUnit.key === 'min' && smallUnit.key === 's') {
+        html += `<div class="solution-note" style="font-size:12px;">⏱️ דקה אחת שווה ל-60 שניות (כמו בשעון).</div>`;
+      } else if (bigUnit.key === 'hour' && smallUnit.key === 'min') {
+        html += `<div class="solution-note" style="font-size:12px;">⏱️ שעה אחת שווה ל-60 דקות.</div>`;
+      } else if (bigUnit.key === 'hour' && smallUnit.key === 's') {
+        html += `<div class="solution-note" style="font-size:12px;">⏱️ שעה אחת = 60 דקות × 60 שניות = 3,600 שניות.</div>`;
+      }
+    }
+  }
+
+  // ============ STEP 3: The calculation ============
+  html += `<div class="step-header" style="margin-top:14px;">🧮 שלב 3 — מבצעים את החישוב</div>`;
+
+  if (ratio >= 1) {
+    // src is bigger, multiply
+    html += `<div class="solution-note">המקור (<span class="unit-display">${srcH}</span>) הוא היחידה הגדולה. כל יחידה מקור = ${fmt(ratio)} יחידות יעד.</div>`;
+    html += `<div class="solution-note">לכן <strong>מכפילים</strong> את המספר ב-${fmt(ratio)}:</div>`;
+    html += `<div class="solution-step">${fmt(q.srcVal)} × ${fmt(ratio)} = <strong style="color:var(--green);">${fmt(q.correctVal)}</strong></div>`;
+
+    // Show the math intuition for round numbers
+    if (Number.isInteger(ratio) && ratio === 10) {
+      html += `<div class="solution-note" style="font-size:12px;">💡 כפל ב-10 = הוספת אפס (או הזזת הנקודה ימינה).</div>`;
+    } else if (Number.isInteger(ratio) && ratio === 100) {
+      html += `<div class="solution-note" style="font-size:12px;">💡 כפל ב-100 = הוספת שני אפסים.</div>`;
+    } else if (Number.isInteger(ratio) && ratio === 1000) {
+      html += `<div class="solution-note" style="font-size:12px;">💡 כפל ב-1,000 = הוספת שלושה אפסים.</div>`;
+    } else if (Number.isInteger(ratio) && ratio === 1000000) {
+      html += `<div class="solution-note" style="font-size:12px;">💡 כפל ב-1,000,000 = הוספת שישה אפסים.</div>`;
+    }
+  } else {
+    const inv = 1 / ratio;
+    html += `<div class="solution-note">המקור (<span class="unit-display">${srcH}</span>) הוא היחידה הקטנה. כל יחידת יעד = ${fmt(inv)} יחידות מקור.</div>`;
+    html += `<div class="solution-note">לכן <strong>מחלקים</strong> את המספר ב-${fmt(inv)}:</div>`;
+    html += `<div class="solution-step">${fmt(q.srcVal)} ÷ ${fmt(inv)} = <strong style="color:var(--green);">${fmt(q.correctVal)}</strong></div>`;
+
+    if (Number.isInteger(inv) && inv === 10) {
+      html += `<div class="solution-note" style="font-size:12px;">💡 חילוק ב-10 = הזזת הנקודה שמאלה ספרה אחת.</div>`;
+    } else if (Number.isInteger(inv) && inv === 100) {
+      html += `<div class="solution-note" style="font-size:12px;">💡 חילוק ב-100 = הזזת הנקודה שמאלה שתי ספרות.</div>`;
+    } else if (Number.isInteger(inv) && inv === 1000) {
+      html += `<div class="solution-note" style="font-size:12px;">💡 חילוק ב-1,000 = הזזת הנקודה שמאלה שלוש ספרות.</div>`;
+    } else if (Number.isInteger(inv) && inv === 1000000) {
+      html += `<div class="solution-note" style="font-size:12px;">💡 חילוק ב-1,000,000 = הזזת הנקודה שמאלה שש ספרות.</div>`;
+    }
+  }
+
+  // ============ Final answer ============
+  html += `<div class="solution-note" style="margin-top:12px; padding:12px; background:rgba(52,211,153,0.12); border-radius:8px; border:1px solid rgba(52,211,153,0.4); text-align:center;">
+    ✓ <strong style="color:var(--green); font-size:16px;">תשובה סופית: ${fmt(q.correctVal)} <span class="unit-display">${tgtH}</span></strong>
+  </div>`;
+
+  box.innerHTML = html;
+  box.classList.add('show', isCorrect ? 'correct' : 'wrong');
+}
+
+function nextQuestion() {
+  quiz.current++;
+  if (quiz.current >= TOTAL_QUESTIONS) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+  const pct = Math.round((quiz.score / TOTAL_QUESTIONS) * 100);
+  document.getElementById('final-score').textContent = quiz.score;
+  document.getElementById('final-total').textContent = TOTAL_QUESTIONS;
+  document.getElementById('final-pct').textContent = pct;
+
+  let emoji, title;
+  if (pct === 100) { emoji = '🏆'; title = 'מושלם!'; }
+  else if (pct >= 80) { emoji = '🌟'; title = 'מצוין!'; }
+  else if (pct >= 60) { emoji = '👍'; title = 'יפה מאוד!'; }
+  else if (pct >= 40) { emoji = '📚'; title = 'כדאי לתרגל עוד'; }
+  else { emoji = '💪'; title = 'בוא ננסה שוב!'; }
+  document.getElementById('results-emoji').textContent = emoji;
+  document.getElementById('results-title').textContent = title;
+}
+
+function resetQuiz() {
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = 'block';
+}
+
+// Init
+buildTable();
+</script>
+</body>
+</html>
